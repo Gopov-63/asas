@@ -1,45 +1,53 @@
 @model IEnumerable<ShoppingList.Models.Products.ProductListVM>
 
+
 @{
-    ViewData["Title"] = "Products";
+    ViewData["Title"] = "Index";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Products</h1>
-    <a asp-action="Create" class="btn btn-success">
-        Create New
-    </a>
+<h1 class="text-center">Products</h1>
+<hr />
+
+<div class="d-grid gap-2 mb-3">
+    <a asp-controller="Products" asp-action="Create" class="btn btn-primary">Create Product</a>
 </div>
 
-@if (!Model.Any())
+@if (Model != null && Model.Any())
 {
-    <div class="alert alert-info">
-        Няма добавени продукти. <a asp-action="Create">Добавете първия</a>
-    </div>
-}
-else
-{
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        @foreach (var item in Model)
+    <div class="row">
+        @foreach (var product in Model)
         {
-            <div class="col">
-                <div class="card h-100 shadow-sm">
+            <div class="col-sm-6 mb-3">
+                <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">@item.ProductName</h5>
-                        <p class="card-text text-muted">ID: @item.Id</p>
-                    </div>
-                    <div class="card-footer bg-transparent border-top-0">
-                        <div class="btn-group w-100" role="group">
-                            <a asp-action="Details" asp-route-id="@item.Id"
-                               class="btn btn-outline-primary btn-sm">Details</a>
-                            <a asp-action="Edit" asp-route-id="@item.Id"
-                               class="btn btn-outline-secondary btn-sm">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id"
-                               class="btn btn-outline-danger btn-sm">Delete</a>
+                        <h4 class="card-title text-center">@product.ProductName</h4>
+
+                        <div class="d-grid gap-2">
+                            <a asp-controller="Products" 
+                               asp-action="Edit" 
+                               asp-route-id="@product.Id" 
+                               class="btn btn-warning">
+                                Edit
+                            </a>
+
+                            <form asp-controller="Products" 
+                                  asp-action="Delete" 
+                                  asp-route-id="@product.Id" 
+                                  method="post" 
+                                  class="mt-2">
+                                @Html.AntiForgeryToken()
+                                <div class="d-grid gap-2">
+                                    <input type="submit" value="Delete" class="btn btn-danger" />
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         }
     </div>
+}
+else
+{
+    <p class="text-center">No products yet!</p>
 }
